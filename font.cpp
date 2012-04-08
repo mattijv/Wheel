@@ -185,7 +185,7 @@ namespace wheel
          h = (g.metrics.h) / (scrheight) * 2.0f;
   
          glTranslatef(x,y-h,0);
-         glBegin( GL_TRIANGLES );
+         glBegin( GL_TRIANGLE_STRIP );
             glTexCoord2f( s1, t1 );
             glVertex2f( 0.0f, h );
             glTexCoord2f( s2, t1 );
