@@ -18,23 +18,64 @@ namespace wheel
    }
 }
 
+namespace wheel
+{
+   struct cvec2d_t
+   {
+      uint32_t x, y;
+   };
+}
+
+namespace std
+{
+   template<>
+   struct hash<typename wheel::cvec2d_t>// : public unary_function<wheel::cvec2d_t, size_t>
+   {
+      public:
+         size_t operator()(const wheel::cvec2d_t& x) const
+         {
+            size_t l = std::hash<uint32_t>()(x.x);
+            size_t r = std::hash<uint32_t>()(x.y);
+
+            return l ^ ~r;
+         }
+   };
+}
+
+namespace wheel
+{
+   struct vertexdata
+   {
+      float xpos, ypos, red, green, blue, s0, s1, t0, t1;
+   };
+
+   class UIRenderer
+   {
+      private:
+         uint32_t scrwidth, scrheight;
+         std::vector<uint32_t> vectices;
+
+      public:
+         std::unordered_map<cvec2d_t, uint32_t> vert;
+   };
+}
+
 int main( int argc, char* argv[] )
 {
    GLFWwindow win;
    glfwInit();
-   win=glfwOpenWindow(512,512,GLFW_WINDOWED,"title",nullptr);
+   win=glfwOpenWindow(1024,640,GLFW_WINDOWED,"title",nullptr);
    glewInit();
-
-   glPixelStorei(GL_PACK_ALIGNMENT, 1);
-   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
    glEnable( GL_BLEND );
    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
    glEnable( GL_TEXTURE_2D );
 
-   wheel::Font font;
+   wheel::Font font, font2;
 
    font.load("DroidSans.ttf", 32);
+   font2.cache = font.cache;
+   font2.load("DroidSans.ttf", 8);
 
    glDisable( GL_TEXTURE_2D );
 
@@ -53,13 +94,6 @@ int main( int argc, char* argv[] )
 
    glColor4f(0.0,0.,0.,0.3);
 
-//   wheel::rect_t r_a = font.chartable[U'A'];
-/*
-   float s1 = r_a.x / 512.0f;
-   float t1 = r_a.y / 512.0f;
-   float s2 = (r_a.x+r_a.w) / 512.0f;
-   float t2 = (r_a.y+r_a.h) / 512.0f;
-*/
    float s1 = 0.0f;
    float t1 = 0.0f;
    float s2 = 1.0f;
@@ -75,8 +109,8 @@ int main( int argc, char* argv[] )
       glTexCoord2f( s1, t1 );
       glVertex2f(-1.0f,  1.0f);
    glEnd();
-
-   font.drawtest();
+//*/
+   font.write(U"omfg?");
 
    while(glfwIsWindow(win))
    {

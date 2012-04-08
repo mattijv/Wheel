@@ -1,9 +1,4 @@
 /*
-   Texture atlasing class, packs bitmap images to a single texture.
-
-   This implementation depends on OpenGL.
-   This code is released to public domain.
-
    gcc -std=c++0x -c atlas.cpp
 */
 #include "atlas.h"
@@ -139,6 +134,9 @@ namespace wheel
 
       glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
       glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+
+      glPixelStorei(GL_PACK_ALIGNMENT, 1);
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
       glTexImage2D( GL_TEXTURE_2D, 0, internalformat, tex_w, tex_h, 0, internalformat, GL_UNSIGNED_BYTE, 0 );
    }

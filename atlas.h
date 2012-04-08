@@ -48,7 +48,6 @@ namespace wheel
    {
       private:
          uint32_t       texid;
-         uint32_t       offset_x, offset_y, width, height;
          atlas_fmt_t    internalformat;
 
          float          tex_w, tex_h;
@@ -67,6 +66,8 @@ namespace wheel
       public:
          Atlas();
         ~Atlas();
+
+         uint32_t       offset_x, offset_y, width, height;
 
          std::vector<rect_t> mapped;
 
