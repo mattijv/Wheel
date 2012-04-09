@@ -8,6 +8,8 @@
 #include <vector>
 #include <cassert>
 
+#include "wtypes.h"
+
 #define WHEEL_CLEAN_AT_EXIT                  0x01
 
 #define WHEEL_ATLAS_TEXTURE_NOT_INITIALISED  -1
@@ -23,25 +25,6 @@ namespace wheel
       WHEEL_ATLAS_FMT_RGB  = GL_RGB,
       WHEEL_ATLAS_FMT_LUM  = GL_LUMINANCE,
       WHEEL_ATLAS_FMT_ALPHA= GL_ALPHA
-   };
-
-   struct rect_t
-   {
-      int32_t w, h, x, y;
-
-      // Required for sorting
-      bool operator<(const rect_t& r)
-      {
-         return w*h < r.w * r.h;
-      }
-      bool operator==(const rect_t& r)
-      {
-         return ((w == r.w) && (h == r.h) && (x == r.x) && (y == r.y));
-      }
-   };
-   struct rectf_t
-   {
-      float tl, tr, bl, br;
    };
 
    class Atlas

@@ -33,5 +33,23 @@ namespace wheel
             return u8l;
          }
    };
+   struct rect_t
+   {
+      int32_t w, h, x, y;
+
+      // Required for sorting
+      bool operator<(const rect_t& r)
+      {
+         return w*h < r.w * r.h;
+      }
+      bool operator==(const rect_t& r)
+      {
+         return ((w == r.w) && (h == r.h) && (x == r.x) && (y == r.y));
+      }
+   };
+   struct rectf_t
+   {
+      float tl, tr, bl, br;
+   };
 }
 #endif
