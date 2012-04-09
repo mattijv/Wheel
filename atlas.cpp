@@ -216,8 +216,11 @@ namespace wheel
 
       rect_t dest = Fit(w, h);
 
+      // This test doesn't work for non-existant characters (' ')
       if ((dest.w == 0) || (dest.h == 0))
+      {
          return WHEEL_ATLAS_FULL;
+      }
 
       Prune(dest);
 

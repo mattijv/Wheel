@@ -44,22 +44,88 @@ namespace std
 
 namespace wheel
 {
+/*
    struct vertexdata
    {
-      float xpos, ypos, red, green, blue, s0, s1, t0, t1;
+      float x, y,
+            u, v;
    };
 
    class UIRenderer
    {
       private:
          uint32_t scrwidth, scrheight;
-         std::vector<uint32_t> vectices;
+         std::vector<vertexdata> vertices;
 
       public:
-         std::unordered_map<cvec2d_t, uint32_t> vert;
+         UIRenderer();
+
+         void update();
+         void render();
+         void addrect(const rect_t& r, const rect_t& uv, const float& w, const float& h);
+         void reset();
    };
+*/
 }
 
+namespace wheel
+{
+   UIRenderer::UIRenderer()
+   {
+      scrwidth = 1024;
+      scrheight = 640;
+   }
+   void UIRenderer::render()
+   {
+      glEnableClientState(GL_VERTEX_ARRAY);
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glEnableClientState(GL_COLOR_ARRAY);
+
+      glVertexPointer(2, GL_FLOAT, sizeof(vertexdata), &vertices[0].x);
+      glTexCoordPointer(2, GL_FLOAT, sizeof(vertexdata), &vertices[0].u);
+      glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(vertexdata), &vertices[0].rgba);
+      glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+   }
+   void UIRenderer::addrect(const rect_t& r, const rect_t& uv, const float& uiw, const float& uih, int off_x, int off_y, uint32_t colour)
+   {
+      vertexdata vd1,vd2,vd3,vd4;
+
+      vd1.x = (r.x + r.w) + off_x;
+      vd1.y = r.y + off_y;
+      vd1.u = (uv.x + uv.w) / uiw;
+      vd1.v = uv.y / uih;
+      vd1.rgba = colour;
+
+      vd2.x = r.x + off_x;
+      vd2.y = r.y + off_y;
+      vd2.u = uv.x / uiw;
+      vd2.v = uv.y / uih;
+      vd2.rgba = colour;
+
+      vd3.x = r.x + off_x;
+      vd3.y = (r.y - r.h) + off_y;
+      vd3.u = uv.x / uiw;
+      vd3.v = (uv.y + uv.h) / uih;
+      vd3.rgba = colour;
+
+      vd4.x = (r.x + r.w) + off_x;
+      vd4.y = (r.y - r.h) + off_y;
+      vd4.u = (uv.x + uv.w) / uiw;
+      vd4.v = (uv.y + uv.h) / uih;
+      vd4.rgba = colour;
+
+      vertices.push_back( vd1 );
+      vertices.push_back( vd2 );
+      vertices.push_back( vd3 );
+      vertices.push_back( vd1 );
+      vertices.push_back( vd3 );
+      vertices.push_back( vd4 );
+   }
+   void UIRenderer::reset()
+   {
+      vertices.clear();
+   }
+}
 int main( int argc, char* argv[] )
 {
    GLFWwindow win;
@@ -71,46 +137,25 @@ int main( int argc, char* argv[] )
    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
    glEnable( GL_TEXTURE_2D );
 
+   glMatrixMode(GL_PROJECTION);
+   glOrtho(0,1024,0,640,-1,1);
+   glMatrixMode(GL_MODELVIEW);
+
    wheel::Font font, font2;
 
    font.load("DroidSans.ttf", 32);
    font2.cache = font.cache;
    font2.load("DroidSans.ttf", 8);
 
-   glDisable( GL_TEXTURE_2D );
+   wheel::UIRenderer uir;
 
-   glBegin( GL_QUADS );
-      glColor4f(1.0f,0.0f,0.0f,1.0f);
-      glVertex2f(-1.0f, -1.0f);
-      glColor4f(1.0f,1.0f,1.0f,1.0f);
-      glVertex2f( 1.0f, -1.0f);
-      glColor4f(1.0f,0.0f,1.0f,1.0f);
-      glVertex2f( 1.0f,  1.0f);
-      glColor4f(1.0f,1.0f,1.0f,1.0f);
-      glVertex2f(-1.0f,  1.0f);
-   glEnd();
+   font.batchr(U"The quick brown", &uir);
+   font.setcolour(0xff00ffff);
+   font.batchr(U" fox", &uir);
+   font.setcolour(0xffffffff);
+   font.batchr(U" jumped", &uir);
 
-   glEnable( GL_TEXTURE_2D );
-
-   glColor4f(0.0,0.,0.,0.3);
-
-   float s1 = 0.0f;
-   float t1 = 0.0f;
-   float s2 = 1.0f;
-   float t2 = 1.0f;
-
-   glBegin( GL_QUADS );
-      glTexCoord2f( s1, t2 );
-      glVertex2f(-1.0f, -1.0f);
-      glTexCoord2f( s2, t2 );
-      glVertex2f( 1.0f, -1.0f);
-      glTexCoord2f( s2, t1 );
-      glVertex2f( 1.0f,  1.0f);
-      glTexCoord2f( s1, t1 );
-      glVertex2f(-1.0f,  1.0f);
-   glEnd();
-//*/
-   font.write(U"omfg?");
+   uir.render();
 
    while(glfwIsWindow(win))
    {

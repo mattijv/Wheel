@@ -16,6 +16,31 @@
 
 namespace wheel
 {
+   struct vertexdata
+   {
+      float    x, y,
+               u, v;
+      uint32_t rgba;
+      uint32_t padding[3];
+   };
+
+   class UIRenderer
+   {
+      private:
+         uint32_t scrwidth, scrheight;
+         std::vector<vertexdata> vertices;
+
+      public:
+         UIRenderer();
+
+         uint32_t flags;
+
+         void update();
+         void render();
+         void addrect(const rect_t& r, const rect_t& uv, const float& w, const float& h, int off_x = 0, int off_y = 0, uint32_t colour = 0xffffffff);
+         void reset();
+   };
+
    struct glyph_t
    {
       std::unordered_map<char32_t, float> kerning;
@@ -23,7 +48,6 @@ namespace wheel
       rect_t coord;
 
       float advance;
-      uint32_t vao;
    };
 
    class Font
@@ -37,6 +61,8 @@ namespace wheel
 
          FT_Face face;
          uint32_t ptsize;
+
+         uint32_t pen_x, pen_y, colour;
 
 //         std::unordered_map<cvec2d_t, uint32_t>* vertices;
 
@@ -53,10 +79,12 @@ namespace wheel
          int load(const char* file, unsigned int pt);
          int precache(string chars);
 
-         void batch(const string& text);
+//         void batch(const string& text);
+         void batchr(const string& text, UIRenderer* uir);
          void write(const string& text);
-         void render();
-         
+
+         void move(uint32_t x, uint32_t y);
+         void setcolour(uint32_t c);
    };
 }
 

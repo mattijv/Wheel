@@ -27,6 +27,10 @@ namespace wheel
       cache = nullptr;
 //      vertices = nullptr;
 
+      pen_x = 0;
+      pen_y = 0;
+      colour = 0xffffffff;
+
       flags = 0;
    }
    Font::~Font()
@@ -74,7 +78,7 @@ namespace wheel
       if ((err = FT_Set_Char_Size(face, pt<<6, pt<<6, 96, 96)))
          return err;
 
-      precache(U"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvXxYyZzÄäÖö01234567890().,-+!*?\"\u2020\u00a9");
+      precache(U"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÄäÖö01234567890().,-+!*?\" \u2020\u00a9");
 
       return 0;
    }
@@ -97,7 +101,7 @@ namespace wheel
       }
 
       int32_t rv = cache->Add(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer);
-      if ( rv < 0 )
+      if ( (rv < 0) && (charcode != U' ') )
       {
          warn("texture full");
          return WHEEL_ATLAS_FULL;
@@ -146,61 +150,34 @@ namespace wheel
       }
       return 0;
    }
-   void Font::render()
+   void Font::batchr(const string& text, UIRenderer* uir)
    {
-   }
-   void Font::batch(const string& text)
-   {
-   }
-   void Font::write(const string& text)
-   {
-      //TODO: VBO/VAO, this is just quick test to see everything works
+      if (uir == nullptr) return;
+
       glyph_t g;
-
-      float s1 ,x;
-      float t1 ,y;
-      float s2 ,w;
-      float t2 ,h;
-
-      glMatrixMode(GL_MODELVIEW);
-
       for (char32_t charcode : text)
       {
-         if ( chartable.count(charcode) == 0 )
+         if (chartable.count(charcode) == 0)
          {
-            //TODO: Load the character from fly
-            std::cout << "no charcode\n";
             continue;
          }
          g = chartable[charcode];
 
-         s1 = g.coord.x / (float)cache->width;
-         t1 = g.coord.y / (float)cache->height;
-         s2 = (g.coord.x+g.coord.w) / (float)cache->width;
-         t2 = (g.coord.y+g.coord.h) / (float)cache->height;
-
-         x = g.metrics.x / (float)(scrwidth) * 2.0f;
-         y = g.metrics.y / (float)(scrheight) * 2.0f;
-         w = (g.metrics.w) / (scrwidth) * 2.0f;
-         h = (g.metrics.h) / (scrheight) * 2.0f;
-  
-         glTranslatef(x,y-h,0);
-         glBegin( GL_TRIANGLE_STRIP );
-            glTexCoord2f( s1, t1 );
-            glVertex2f( 0.0f, h );
-            glTexCoord2f( s2, t1 );
-            glVertex2f( w, h );
-            glTexCoord2f( s1, t2 );
-            glVertex2f( 0.0f, 0.0f );
-            glTexCoord2f( s2, t2 );
-            glVertex2f( w,  0.0f );
-         glEnd();
-         glTranslatef(-x,h-y,0);
-
-         glTranslatef(g.advance / scrwidth * 2.0f, 0, 0);
+         uir->addrect(g.metrics, g.coord, cache->width, cache->height, pen_x, pen_y, colour);
+         pen_x += g.advance;
       }
-      glLoadIdentity();
-
+   }
+   void Font::move(uint32_t x, uint32_t y)
+   {
+      pen_x = x;
+      pen_y = y;
+   }
+   void Font::setcolour(uint32_t c)
+   {
+      colour = c;
+   }
+   void Font::write(const string& text)
+   {
    }
    // Static member definitions
    FT_Library Font::ftlib = nullptr;
