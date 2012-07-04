@@ -3,6 +3,8 @@
 
 #include "utf8.h"
 
+#include <unordered_map>
+
 namespace wheel
 {
    class string: public std::basic_string<char32_t>
@@ -51,6 +53,10 @@ namespace wheel
             return strtoul(this->u8_str().c_str(), nullptr, 0);
          }
    };
+
+   typedef std::pair<string, string>            option_t;
+   typedef std::unordered_map<string, string>   optionlist_t;
+
    struct rect_t
    {
       int32_t w, h, x, y;
@@ -78,6 +84,16 @@ namespace wheel
 
 namespace std
 {
+  template<>
+    struct hash<wheel::string>
+    : public __hash_base<size_t, wheel::string>
+    {
+      size_t
+      operator()(const wheel::string& __s) const noexcept
+      { return std::_Hash_impl::hash(__s.data(),
+                                     __s.length() * sizeof(char32_t)); }
+    };
+
    template<>
    struct hash<typename wheel::cvec2d_t>// : public unary_function<wheel::cvec2d_t, size_t>
    {
