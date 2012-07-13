@@ -1,0 +1,7 @@
+#ifndef WHEEL_COMMON_HEAD
+#define WHEEL_COMMON_HEAD
+
+#define  WHEEL_INITIALISED    0b01
+#define  WHEEL_LITTLE_ENDIAN  0b10
+
+#endif
