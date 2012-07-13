@@ -9,7 +9,7 @@
 #include "font.h"
 #include "window.h"
 
-#include <GL/glfw3.h>
+#include "platform-gl.h"
 
 namespace wheel
 {

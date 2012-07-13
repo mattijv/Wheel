@@ -1,7 +1,8 @@
 #ifndef WHEEL_UIRENDERER_HEAD
 #define WHEEL_UIRENDERER_HEAD
 
-#include <GL/glew.h>
+#include "platform-gl.h"
+
 #include <cstdint>
 #include <vector>
 

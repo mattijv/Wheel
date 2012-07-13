@@ -10,7 +10,7 @@
 
 #include "atlas.h"
 #include "wtypes.h"
-#include "uirenderer.h"
+#include "baserenderer.h"
 
 #define WHEEL_REQUEST_KERNING_UPDATE   0x02
 #define WHEEL_CLEAN_VERTICE_BUFFER     0x04
@@ -56,7 +56,7 @@ namespace wheel
          int Precache(string chars);
 
 //         void batch(const string& text);
-         void Batchr(const string& text, UIRenderer* uir);
+         void Batch(const string& text, BaseRenderer* rndr);
          void Write(const string& text);
 
          void Move(uint32_t x, uint32_t y);

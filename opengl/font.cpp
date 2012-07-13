@@ -135,6 +135,7 @@ namespace wheel
       }
       return 0;
    }
+/*
    void Font::Batchr(const string& text, UIRenderer* uir)
    {
       if (uir == nullptr) return;
@@ -152,6 +153,7 @@ namespace wheel
          pen_x += g.advance;
       }
    }
+*/
    void Font::Move(uint32_t x, uint32_t y)
    {
       pen_x = x;

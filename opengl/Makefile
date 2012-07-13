@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-O3 -std=c++11 -Iinclude `freetype-config --cflags` -I ../include
-SOURCES=atlas.cpp font.cpp uirenderer.cpp wheel.cpp window.cpp
+SOURCES=atlas.cpp font.cpp baserenderer.cpp wheel.cpp
 OBJECTS=$(addprefix ../objects/, $(addsuffix .o, $(basename ${SOURCES})))
 EXECUTABLE=../bin/a.out
 LDFLAGS=-O3 -pthread
@@ -24,13 +24,10 @@ $(EXECUTABLE): $(OBJECTS)
 ../objects/font.o: font.cpp  $(HEADERS)
 	$(CC) $(CFLAGS) $< -c -o $@
 
-../objects/uirenderer.o: uirenderer.cpp $(HEADERS)
+../objects/baserenderer.o: baserenderer.cpp $(HEADERS)
 	$(CC) $(CFLAGS) $< -c -o $@
 
 ../objects/wheel.o: wheel.cpp  $(HEADERS)
-	$(CC) $(CFLAGS) $< -c -o $@
-
-../objects/window.o: window.cpp  $(HEADERS)
 	$(CC) $(CFLAGS) $< -c -o $@
 
 clean:
