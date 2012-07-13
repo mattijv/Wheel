@@ -52,15 +52,15 @@ namespace wheel
          Font();
         ~Font();
 
-         int load(const char* file, unsigned int pt);
-         int precache(string chars);
+         int Load(const char* file, unsigned int pt);
+         int Precache(string chars);
 
 //         void batch(const string& text);
-         void batchr(const string& text, UIRenderer* uir);
-         void write(const string& text);
+         void Batchr(const string& text, UIRenderer* uir);
+         void Write(const string& text);
 
-         void move(uint32_t x, uint32_t y);
-         void setcolour(uint32_t c);
+         void Move(uint32_t x, uint32_t y);
+         void SetColour(uint32_t c);
    };
 }
 

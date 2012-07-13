@@ -72,7 +72,7 @@ namespace wheel
    {
       wheel::Font* font = new Font;
       font->cache = &cache;
-      font->load(file, pt);
+      font->Load(file, pt);
       fontlist.push_back(font);
       return fontlist.size()-1;
    }
@@ -88,9 +88,9 @@ namespace wheel
       if (!( flags & WHEEL_GUI_REQUEST_REDRAW ))
          return;
 
-      if ((px > 0) && (py > 0)) fontlist[font]->move(px, py);
-      fontlist[font]->setcolour(c);
-      fontlist[font]->batchr(text, &uir);
+      if ((px > 0) && (py > 0)) fontlist[font]->Move(px, py);
+      fontlist[font]->SetColour(c);
+      fontlist[font]->Batchr(text, &uir);
    }
 }
 

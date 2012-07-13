@@ -25,7 +25,6 @@ namespace wheel
    {
       BaseInit();
       cache = nullptr;
-//      vertices = nullptr;
 
       pen_x = 0;
       pen_y = 0;
@@ -35,13 +34,6 @@ namespace wheel
    }
    Font::~Font()
    {
-/*
-      if ( flags & WHEEL_CLEAN_VERTICE_BUFFER )
-      {
-         delete vertices;
-         vertices = nullptr;
-      }
-*/
       if ( face != nullptr )
          FT_Done_Face( face );
 
@@ -66,7 +58,7 @@ namespace wheel
 
       return fcount;
    }
-   int Font::load(const char* file, unsigned int pt)
+   int Font::Load(const char* file, unsigned int pt)
    {
       int err = 0;
       if ((err = FT_New_Face(ftlib, file, 0, &face)))
@@ -78,7 +70,7 @@ namespace wheel
       if ((err = FT_Set_Char_Size(face, pt<<6, pt<<6, 96, 96)))
          return err;
 
-      precache(U"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÄäÖö01234567890().:,-+!*?\" \u2020\u00a9");
+      Precache(U"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÄäÖö01234567890().:,-+!*?\" \u2020\u00a9");
 
       return 0;
    }
@@ -118,20 +110,13 @@ namespace wheel
          nglyph.metrics.h = face->glyph->bitmap.rows;
 
          nglyph.advance = face->glyph->advance.x >> 6;
-/*
-         if (vertices == nullptr)
-         {
-            vertices = new std::unordered_map<cvec2d_t, uint32_t>();
-            flags |= WHEEL_CLEAN_VERTICE_BUFFER;
-            cvec2d_t t;
-         }
-*/
+
          chartable.insert( std::pair<char32_t, glyph_t>(charcode, nglyph) );
       }
       return 0;
    }
 
-   int Font::precache(string chars)
+   int Font::Precache(string chars)
    {
       if (cache == nullptr)
       {
@@ -150,7 +135,7 @@ namespace wheel
       }
       return 0;
    }
-   void Font::batchr(const string& text, UIRenderer* uir)
+   void Font::Batchr(const string& text, UIRenderer* uir)
    {
       if (uir == nullptr) return;
 
@@ -167,18 +152,19 @@ namespace wheel
          pen_x += g.advance;
       }
    }
-   void Font::move(uint32_t x, uint32_t y)
+   void Font::Move(uint32_t x, uint32_t y)
    {
       pen_x = x;
       pen_y = y;
    }
-   void Font::setcolour(uint32_t c)
+   void Font::SetColour(uint32_t c)
    {
       colour = c;
    }
-   void Font::write(const string& text)
+   void Font::Write(const string& text)
    {
    }
+
    // Static member definitions
    FT_Library Font::ftlib = nullptr;
    int Font::fcount = 0;

@@ -44,12 +44,12 @@ int main( int argc, char* argv[] )
    uint32_t frames = 0;
    wheel::string fpsmsg;
 
+/*
    wheel::Frame window;
 
    window.setsize(20, 20);
-
    int mainwin = gui.addelement(&window);
-
+*/
    //-----------------------------------------------------------------------
 
    while(glfwIsWindow(win))

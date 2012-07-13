@@ -201,6 +201,13 @@ namespace wheel
          cflags |= WHEEL_INITIALISED;
       }
    }
+
+   Packet::WriteJSON(const char* file)
+   {
+      ofstream out;
+      out.open(file);
+      out.close();
+   }
 }
 
 int main(void)

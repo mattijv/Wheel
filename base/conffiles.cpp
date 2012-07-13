@@ -3,7 +3,16 @@
 
 namespace wheel
 {
+   uint32_t Configuration::load(const std::string& file)
+   {
+      
+   }
+/*
    uint32_t readconfig(string file, string section, optionlist_t* list)
+   void Configuration::load(const std::string& file)
+   {
+      if (readconfig(&options
+   };
    {
       std::fstream filestream;
 
@@ -64,7 +73,9 @@ namespace wheel
          filestream.close();
          return WHEEL_CONFIG_INVALID_FILE;
       }
+      filestream.close();
+      return WHEEL_OK;
    }
-   filestream.close();
-   return WHEEL_OK;
+*/
 }
+
